@@ -26,6 +26,14 @@ def priority_calculator(item: str) -> int:
     return position + 1
 
 
+def split_rucksacks_into_groups(rucksacks: list) -> list:
+    return [rucksacks[i:i+3] for i in range(0, len(rucksacks), 3)]
+
+
+def common_item_type_in_groups(rucksack_group: list) -> str:
+    return list(set(rucksack_group[0]).intersection((set(rucksack_group[1]))).intersection(set(rucksack_group[2])))[0]
+
+
 if __name__ == "__main__":
     rucksacks = load_data()
     sum_common_item_priorities = 0
@@ -35,4 +43,11 @@ if __name__ == "__main__":
         priority = priority_calculator(common_item)
         sum_common_item_priorities += priority
     print(sum_common_item_priorities)
+    elf_rucksack_groups = split_rucksacks_into_groups(rucksacks)
+    sum_common_item_priorities_v2 = 0
+    for group in elf_rucksack_groups:
+        common_item_in_group = common_item_type_in_groups(group)
+        priority_v2 = priority_calculator(common_item_in_group)
+        sum_common_item_priorities_v2 += priority_v2
+    print(sum_common_item_priorities_v2)
 
