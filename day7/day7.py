@@ -53,6 +53,14 @@ def dir_filter(name_sizes: list) -> list:
     return result
 
 
+def dir_filter_v2(directory_reference: list) -> int:
+    sizes = [i[1] for i in directory_reference]
+    current_disk_usage = [i[1] for i in directory_reference if i[0] == "/"][0]
+    free_space = 70000000 - current_disk_usage
+    required_additional_space = 30000000 - free_space
+    closest = min(sizes, key=lambda x: abs(x - required_additional_space))
+    return closest
+
 
 def calculate_full_dir_size(names_sizes: list) -> int:
     # Calculate all directories
@@ -68,7 +76,6 @@ def calculate_full_dir_size(names_sizes: list) -> int:
     return result
 
 
-
 if __name__ == "__main__":
     data = load_data()
     directory_blocks = directory_block_paths(data)
@@ -78,7 +85,8 @@ if __name__ == "__main__":
         directory_contents = block[1]
         size = directory_size_calculator(directory_contents)
         result.append([directory_name, size])
-    out = calculate_full_dir_size(result)
-    filtered_directories = dir_filter(out)
+    directory_sizes_reference = calculate_full_dir_size(result)
+    filtered_directories = dir_filter(directory_sizes_reference)
     print(filtered_directories)
     print(sum([i[1] for i in filtered_directories]))
+    print(dir_filter_v2(directory_sizes_reference))
