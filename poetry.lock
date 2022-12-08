@@ -55,7 +55,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "de02cd715d5904903888c8d05e7e9d3c7d0f12ec45a8a440ec3911ef9417827e"
+content-hash = "98956a056089607c52f33c570dba3f7d96f71b105b45ee70af3f09abd7557abc"
 
 [metadata.files]
 numpy = [
