@@ -26,25 +26,37 @@ def update_head_position(starting_position: tuple, direction: str, distance: int
         raise Exception
 
 
-def update_tail_position(starting_tail_position: tuple, head_position: tuple, last_movement_direction: str) -> tuple:
+def update_tail_position(starting_tail_position: tuple, head_position: tuple) -> tuple:
     square_root_distance = math.sqrt((head_position[1] - starting_tail_position[1]) ** 2 +
                                      (head_position[0] - starting_tail_position[0]) ** 2)
-
 
     if square_root_distance <= math.sqrt(2.0):
         return starting_tail_position
     else:
-
-        if last_movement_direction == "L":
-            return head_position[0], starting_tail_position[1] - 1
-        elif last_movement_direction == "R":
-            return head_position[0], starting_tail_position[1] + 1
-        elif last_movement_direction == "U":
-            return starting_tail_position[0] - 1, head_position[1]
-        elif last_movement_direction == "D":
-            return starting_tail_position[0] + 1, head_position[1]
+        if head_position[0] == starting_tail_position[0]:
+            i = starting_tail_position[0]
+            if head_position[1] > starting_tail_position[1]:
+                return i, starting_tail_position[1] + 1
+            elif head_position[1] < starting_tail_position[1]:
+                return i, starting_tail_position[1] - 1
+            else:
+                raise Exception
+        elif head_position[0] > starting_tail_position[0]:
+            i = starting_tail_position[0] + 1
+            if head_position[1] == starting_tail_position[1]:
+                return i, starting_tail_position[1]
+            elif head_position[1] > starting_tail_position[1]:
+                return i, starting_tail_position[1] + 1
+            else:
+                return i, starting_tail_position[1] - 1
         else:
-            raise Exception
+            i = starting_tail_position[0] - 1
+            if head_position[1] == starting_tail_position[1]:
+                return i, starting_tail_position[1]
+            elif head_position[1] > starting_tail_position[1]:
+                return i, starting_tail_position[1] + 1
+            else:
+                return i, starting_tail_position[1] - 1
 
 
 def calculate_distinct_position_visits(tail_trace: list) -> int:
@@ -63,7 +75,7 @@ def main_part_1(movements: list) -> int:
             head_trace.append(head_position)
             tail_trace.append(tail_position)
             head_position = update_head_position(head_position, direction, 1)
-            tail_position = update_tail_position(tail_position, head_position, direction)
+            tail_position = update_tail_position(tail_position, head_position)
     distinct_positions_visited = calculate_distinct_position_visits(tail_trace)
     return distinct_positions_visited
 
@@ -83,11 +95,11 @@ def main_part_2(movements: list) -> int:
             new_tail_positions = []
             temp_head_position = head_position
             for tail_position in tail_positions:
-                tail_position = update_tail_position(tail_position, temp_head_position, direction)
+                tail_position = update_tail_position(tail_position, temp_head_position)
                 temp_head_position = tail_position
                 new_tail_positions.append(tail_position)
             tail_positions = tuple(new_tail_positions)
-    tail_trace = [item for sublist in list(tail_trace) for item in sublist]
+    tail_trace = [t[-1] for t in tail_trace]
     distinct_positions_visited = calculate_distinct_position_visits(tail_trace)
     return distinct_positions_visited
 
